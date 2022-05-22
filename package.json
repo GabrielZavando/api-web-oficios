@@ -1,0 +1,23 @@
+{
+  "name": "api-rest-web-oficios",
+  "version": "1.0.0",
+  "description": "API para la web de Oficios",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "keywords": [],
+  "author": "gabrielzavando.cl",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.3",
+    "node-geocoder": "^4.0.0"
+  }
+}
