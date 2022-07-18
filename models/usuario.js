@@ -17,7 +17,10 @@ const UsuarioSchema = Schema({
     required: [true, 'La descripción es obligatoria'],
     maxlength: [150, 'La descripción no puede tener más de 150 caracteres']
   },
-  img: {
+  banner: {
+    type: String
+  },
+  logo: {
     type: String
   },
   categoria: {
@@ -58,6 +61,7 @@ const UsuarioSchema = Schema({
   rol: {
     type: String,
     required: true,
+    default: 'USER_ROL',
     enum: ['ADMIN_ROL', 'USER_ROL']
   },
   password: {
@@ -69,11 +73,14 @@ const UsuarioSchema = Schema({
   galeria: [{
     type: String
   }],
+  videos: [{
+    type: String
+  }],
   direccion: {
     type: String,
     required: [true, 'La dirección es obligatoria']
   },
-  location: {
+  ubicacion: {
     type: {
       type: String,
       enum: ['Point'],
@@ -96,6 +103,10 @@ const UsuarioSchema = Schema({
   googleSign: {
     type: Boolean,
     default: false
+  },
+  destacado: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -103,7 +114,7 @@ const UsuarioSchema = Schema({
 
 UsuarioSchema.pre('save', async function(next){
   const loc = await geocoder.geocode(this.direccion)
-  this.location = {
+  this.ubicacion = {
     type: 'Point',
     coordenadas: [loc[0].longitude, loc[0].latitude],
     formatodireccion: loc[0].formattedAddress

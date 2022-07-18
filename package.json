@@ -4,7 +4,7 @@
   "description": "API para la web de Oficios",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
+    "start": "node app.js",
     "dev": "nodemon app"
   },
   "keywords": [],

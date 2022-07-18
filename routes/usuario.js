@@ -24,6 +24,12 @@ router.post('/registrar', [
 // Obtener usuarios paginados
 router.get('/listar', UserController.obtenerUsuarios)
 
+// Obtener usuarios destacados
+router.get('/destacados', UserController.obtenerUsuariosDestacados)
+
+// Buscador usuarios:termino
+router.get('/buscar/:termino', UserController.buscarUsuarioTermino)
+
 // Editar usuario
 router.put('/editar/:id', UserController.editarUsuario)
 

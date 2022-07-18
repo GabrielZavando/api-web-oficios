@@ -6,6 +6,7 @@ const cors = require('cors')
 
 // Usuarios
 const UserRoutes = require('../routes/usuario')
+const SearchRoutes = require('../routes/buscar')
 // const LoginRoutes = require('./routes/login')
 
 // Configuración base de datos
@@ -46,6 +47,7 @@ class Server{
 
   routes(){
     this.app.use('/api/v1/user', UserRoutes)
+    this.app.use('/api/v1/buscar', SearchRoutes)
     // this.app.use('/api/login', LoginRoutes)
   }
 

@@ -1,6 +1,10 @@
 const {request, response} = require('express')
 const Usuario = require('../models/usuario')
 
+// Formato de respuesta
+// objeto respuesta que devuelve un array de objetos
+// res.json({respuesta:[{resultado}]})
+
 // Registrar un usuario
 const registrarUsuario = async (req = request, res = response) =>{
   try{
@@ -14,7 +18,9 @@ const registrarUsuario = async (req = request, res = response) =>{
     })
   }catch(err){
     console.error(err)
-    res.status(500).json({error: 'Error del servidor'})
+    res.status(500).json({
+      error: 'Error del servidor'
+    })
   }
 
   // const usuario = req.body
@@ -39,41 +45,81 @@ const registrarUsuario = async (req = request, res = response) =>{
 
 // Obtener usuarios paginados
 const obtenerUsuarios = async(req = request, res = response) =>{
+  const {limite = 6, desde = 0} = req.query
+  const query = {estado: true}
+
   try{
-    const usuarios = await Usuario.find()
+    const [total, usuarios] = await Promise.all([
+      Usuario.countDocuments(query),
+      Usuario.find(query)
+             .skip(Number(desde))
+             .limit(Number(limite))
+    ])
 
     return res.status(200).json({
-      count: usuarios.length,
-      data: usuarios
+      total, usuarios
     })
   }catch(err){
     console.error(err)
-    res.status(500).json({error: 'Error del servidor'})
+    res.status(500).json({
+      error: 'Error del servidor'
+    })
   }
-  // const query = {estado: true}
-  // const {limite = 5, desde = 0} = req.query
 
-  // // Esta es una forma de hacerlo
-  // // const usuarios = await Usuario.find(query)
-  // //                               .skip(Number(desde))
-  // //                               .limit(Number(limite))
-  
-  // // const total = await Usuario.countDocuments(query)
-
-
-  // // Esta forma es más mucho más rápida porque ejecuta los dos await en uno solo. Es como si el array de promesas se ejecutara de manera asincrona.
-
-  // const [total, usuarios] = await Promise.all([
-  //   Usuario.countDocuments(query),
-  //   Usuario.find(query)
-  //          .skip(Number(desde))
-  //          .limit(Number(limite))
-  // ])
-
-  // res.json({
-  //   msg: 'Obtener usuarios paginados'
-  // })
 }
+
+// Obtener usuarios destacados
+const obtenerUsuariosDestacados = async(req = request, res = response) => {
+  const query = {destacado: true}
+
+  try{
+    const destacados = await Usuario.find(query)
+
+    return res.status(200).json(destacados)
+
+  }catch(err){
+    res.status(500).json({
+      error: 'Error del servidor'
+    })
+  }
+
+}
+
+// Buscar /user/buscar/:termino?desde=0&limite=16
+const buscarUsuarioTermino = async(req = request, res = response) => {
+  
+  const {termino} = req.params
+  const {desde = 0, limite = 0} = req.query
+  
+  // transformamos el termino en expresion regular
+  // 'i' es para que sea insensible a mayúsculas y minusculas
+  const regex = new RegExp(termino, 'i')
+
+  try{
+    const consulta = {
+      $or: [{nombre: regex},{correo: regex},{descripcion: regex}],
+      $and: [{estado: true}]
+    }
+    
+    const [total, usuarios] = await Promise.all([
+      Usuario.countDocuments(consulta),
+      Usuario.find(consulta)
+             .skip(Number(desde))
+             .limit(Number(limite))
+    ])
+
+    return res.status(200).json({
+      total, usuarios
+    })
+  }catch(err){
+    console.error(err)
+    res.status(500).json({
+      error: 'Error del servidor'
+    })
+  }
+}
+
+
 
 // Editar un usuario específico
 const editarUsuario = async (req = request, res = response) =>{
@@ -112,7 +158,7 @@ const eliminarUsuario = async (req = request, res = response) =>{
 
   // Enviamos respuesta
   res.json({
-    msg: 'Eliminar Usuario'
+    msg: 'Eliminar Usuario' 
   })
 }
 
@@ -120,6 +166,8 @@ const eliminarUsuario = async (req = request, res = response) =>{
 module.exports = {
   registrarUsuario,
   obtenerUsuarios,
+  obtenerUsuariosDestacados,
   editarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  buscarUsuarioTermino
 }
