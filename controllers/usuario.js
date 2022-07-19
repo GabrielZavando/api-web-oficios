@@ -85,11 +85,11 @@ const obtenerUsuariosDestacados = async(req = request, res = response) => {
 
 }
 
-// Buscar /user/buscar/:termino?desde=0&limite=16
+// Buscar /user/buscar/:termino?desde=0&limite=6
 const buscarUsuarioTermino = async(req = request, res = response) => {
   
   const {termino} = req.params
-  const {desde = 0, limite = 0} = req.query
+  const {desde = 0, limite = 6} = req.query
   
   // transformamos el termino en expresion regular
   // 'i' es para que sea insensible a mayúsculas y minusculas
