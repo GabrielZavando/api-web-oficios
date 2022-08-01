@@ -1,6 +1,8 @@
 const {Schema, model} = require('mongoose')
 const geocoder = require('../helpers/geocoder')
 
+TODO //rrss: [{}] //Para tener un array de objetos
+
 const UsuarioSchema = Schema({
   nombre: {
     type: String,
